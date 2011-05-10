@@ -2,6 +2,7 @@ package com.voole.PanoramicView;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.opengl.GLES10;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.opengl.GLUtils;
@@ -10,7 +11,6 @@ import android.util.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-import java.io.InputStream;
 
 /**
  * Created by IntelliJ IDEA.
@@ -69,10 +69,16 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
 
     private void loadTexture(){
         Bitmap bitmap = null;
-        InputStream is = null;
         bitmap = BitmapFactory.decodeFile(mTexFile);
         setTexture(bitmap);
         bitmap.recycle();
+    }
+
+    private void checkGlError(String op) {
+        int error;
+        while ((error = GLES10.glGetError()) != GLES10.GL_NO_ERROR) {
+            Log.e("Panoramic", op + ": glError " + error);
+        }
     }
 
     public void setTexture(Bitmap bitmap) {
@@ -95,6 +101,7 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
         mTexWidth = bitmap.getWidth();
         mTexHeight = bitmap.getHeight();
         GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
+        checkGlError("texImage2D");
         mGrid = null;
         mGrid = generateSphereGrid();
     }
@@ -171,9 +178,9 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
 
     long lastUpdateTime = 0;
     public void update(){
-        long delta = 0;
+        float delta = 0;
         if(lastUpdateTime > 0)
-            delta = SystemClock.uptimeMillis() - lastUpdateTime;
+            delta = (SystemClock.uptimeMillis() - lastUpdateTime);
         lastUpdateTime = SystemClock.uptimeMillis();
         if (isTouchDown) return;
         if (pitchSpeed > 0){
@@ -193,13 +200,17 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
 
     private boolean isTouchDown = false;
     private float lastX, lastY;
+    private float deltaX, deltaY;
     long lastTouchTime;
+    float deltaMotionTime;
     float yawSpeed;
     float pitchSpeed;
 
     public boolean onTouchDown(float x, float y){
         lastX = x;
         lastY = y;
+        deltaX = 0;
+        deltaY = 0;
         isTouchDown = true;
         return true;
     }
@@ -217,27 +228,27 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
     }
 
     public boolean onTouchMove(float x, float y){
-        float dx,dy;
-        dx = lastX - x;
-        dy = lastY - y;
-        yawAngle += dx/viewWidth* viewXZAngle;
-        setPitchAngle(dy/viewHeight*viewYZAngle);
+        deltaX = lastX - x;
+        deltaY = lastY - y;
+        yawAngle += deltaX/viewWidth* viewXZAngle;
+        setPitchAngle(deltaY/viewHeight*viewYZAngle);
         lastX = x;
         lastY = y;
+        deltaMotionTime = (SystemClock.uptimeMillis() - lastTouchTime);
+        Log.d("onTouchMove", String.format("x:%f,y:%f,deltaX:%f,deltaY:%f,deltaMotionTime:%f",
+                x,y,deltaX,deltaY,deltaMotionTime));
         lastTouchTime = SystemClock.uptimeMillis();
         return true;
     }
 
     public boolean onTouchUp(float x, float y){
         isTouchDown = false;
-        long delta = SystemClock.uptimeMillis() - lastTouchTime;
-        float dx,dy;
-        dx = lastX - x;
-        dy = lastY - y;
-        yawSpeed = dx/viewWidth* viewXZAngle /delta;
-        pitchSpeed = dy/viewHeight*viewYZAngle/delta;
-        Log.d("yawSpeed", String.valueOf(yawSpeed));
-        Log.d("pitchSpeed", String.valueOf(pitchSpeed));
+        if(deltaMotionTime > 0){
+            yawSpeed = deltaX/viewWidth* viewXZAngle/deltaMotionTime;
+            pitchSpeed = deltaY/viewHeight*viewYZAngle/deltaMotionTime;
+            Log.d("yawSpeed", String.valueOf(yawSpeed));
+            Log.d("pitchSpeed", String.valueOf(pitchSpeed));
+        }
         return true;
     }
 }
