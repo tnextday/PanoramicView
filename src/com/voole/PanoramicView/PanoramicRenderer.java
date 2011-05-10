@@ -1,8 +1,5 @@
 package com.voole.PanoramicView;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLSurfaceView;
@@ -11,6 +8,8 @@ import android.opengl.GLUtils;
 import android.os.SystemClock;
 import android.util.Log;
 
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
 import java.io.InputStream;
 
 /**
@@ -55,6 +54,12 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
         gl.glEnable(GL10.GL_TEXTURE_2D);
         gl.glEnable(GL10.GL_DEPTH_TEST);
         gl.glEnable(GL10.GL_TEXTURE_2D);
+        gl.glDisable(GL10.GL_DITHER);
+
+        gl.glClearColor(0,0,0,0);
+        gl.glEnable(GL10.GL_DEPTH_TEST);
+        gl.glEnable(GL10.GL_CULL_FACE);
+
         _gl = gl;
         int[] textures = new int[1];
         gl.glGenTextures(1, textures, 0);
@@ -133,9 +138,6 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
         gl.glViewport(0, 0, width, height);
         viewAspect = (float) width / height;
         viewXZAngle = viewYZAngle*viewAspect;
-        gl.glMatrixMode(GL10.GL_PROJECTION);
-        gl.glLoadIdentity();
-        GLU.gluPerspective(gl, viewYZAngle, viewAspect, 0.1f, 100.0f);
         viewHeight =height;
         viewWidth = width;
     }
@@ -144,17 +146,13 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
     public void onDrawFrame(GL10 gl) {
         if(mGrid == null) return;
         update();
-
-        gl.glDisable(GL10.GL_DITHER);
-
         gl.glTexEnvx(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_MODE,
                 GL10.GL_MODULATE);
-        gl.glClearColor(0,0,0,0);
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
-        gl.glEnable(GL10.GL_DEPTH_TEST);
-
-        gl.glEnable(GL10.GL_CULL_FACE);
+        gl.glMatrixMode(GL10.GL_PROJECTION);
+        gl.glLoadIdentity();
+        GLU.gluPerspective(gl, viewYZAngle, viewAspect, 0.1f, 100.0f);
 
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
