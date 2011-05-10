@@ -180,7 +180,7 @@
     <output url="file://$PROJECT_DIR$/bin" />
   </component>
   <component name="VcsDirectoryMappings">
-    <mapping directory="" vcs="" />
+    <mapping directory="" vcs="hg4idea" />
   </component>
 </project>
 
