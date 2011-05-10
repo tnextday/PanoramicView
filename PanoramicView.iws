@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3ddd87bc-31c0-4515-baf5-c7428aeda1d7" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.hgignore" afterPath="$PROJECT_DIR$/.hgignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PanoramicView.ipr" afterPath="$PROJECT_DIR$/PanoramicView.ipr" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PanoramicView.iws" afterPath="$PROJECT_DIR$/PanoramicView.iws" />
-    </list>
+    <list default="true" id="3ddd87bc-31c0-4515-baf5-c7428aeda1d7" name="Default" comment="" />
     <ignored path="PanoramicView.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
