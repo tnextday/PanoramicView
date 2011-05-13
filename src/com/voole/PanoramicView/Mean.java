@@ -16,14 +16,14 @@
 package com.voole.PanoramicView;
 
 /**
- * A simple class keeping track of the mean of a stream of values within a certain window. the WindowedMean will only return a
+ * A simple class keeping track of the mean of a stream of values within a certain window. the Mean will only return a
  * value in case enough data has been sampled. After enough data has been sampled the oldest sample will be replaced by the newest
  * in case a new sample is added.
  * 
  * @author badlogicgames@gmail.com
  * 
  */
-public final class WindowedMean {
+public final class Mean {
 	float values[];
 	int added_values = 0;
 	int last_value;
@@ -36,7 +36,7 @@ public final class WindowedMean {
 	 * 
 	 * @param window_size size of the sample window
 	 */
-	public WindowedMean (int window_size) {
+	public Mean(int window_size) {
 		values = new float[window_size];
 	}
 
@@ -48,7 +48,7 @@ public final class WindowedMean {
 	}
 
 	/**
-	 * clears this WindowedMean. The class will only return meaningfull values after enough data has been added again.
+	 * clears this Mean. The class will only return meaningfull values after enough data has been added again.
 	 */
 	public void clear () {
 		added_values = 0;

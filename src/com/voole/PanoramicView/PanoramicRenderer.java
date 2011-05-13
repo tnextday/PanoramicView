@@ -17,7 +17,7 @@ import javax.microedition.khronos.opengles.GL10;
  * User: 霍峰
  * Date: 11-5-3
  * Time: 上午9:41
- * Description：全景浏览渲染插件
+ * Description：全景浏览渲染组件
  */
 public class PanoramicRenderer implements GLSurfaceView.Renderer {
     private String mTexFile;
@@ -29,15 +29,21 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
     private float viewWidth;
     private float viewHeight;
     private float viewAspect;
+
     private float viewYZAngle = 60;
     private float viewXZAngle;
+    private float maxViewYZAngle = 60;
 
     public float yawAngle = 90;   //偏航角 0°~360°
     public float pitchAngle = 0; //俯仰角-90° ~ 90°
-    public float scale = 1.0f;       //缩放 0-1
-    private float pitchRange;       //俯仰角范围
-    private float scaleMax;         //最大缩放范围
-    private float scaleMin;         //最小缩放范围       //
+    public float scaleSpeed = -10f;  //缩放速度
+    private float pitchRange;     //俯仰角范围
+
+    private boolean isTouchDown = false;
+    private Mean meanYawSpeed = new Mean(3);
+    private Mean meanPitchSpeed = new Mean(3);
+    float yawSpeed;
+    float pitchSpeed;
 
     public PanoramicRenderer(String mTexFile) {
         this.mTexFile = mTexFile;
@@ -113,6 +119,8 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
         double vAngle,uAngle;
         double uTotalAngle = Math.PI*2;
         double vTotalAngle = uTotalAngle*(mTexHeight/ mTexWidth);
+        maxViewYZAngle = (float) (vTotalAngle/Math.PI *180);
+
         double vStartAngle = vTotalAngle/2;
         pitchRange = 90;
         if (vStartAngle < 90){
@@ -140,13 +148,24 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
         return grid;
     }
 
+    public void setViewYZAngle(float angle){
+        if(angle > maxViewYZAngle){
+            angle = maxViewYZAngle;
+        }
+        viewYZAngle = angle;
+        viewXZAngle = viewYZAngle*viewAspect;
+        _gl.glMatrixMode(GL10.GL_PROJECTION);
+        _gl.glLoadIdentity();
+        GLU.gluPerspective(_gl, viewYZAngle, viewAspect, 0.1f, 10.0f);
+    }
+
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         gl.glViewport(0, 0, width, height);
         viewAspect = (float) width / height;
-        viewXZAngle = viewYZAngle*viewAspect;
         viewHeight =height;
         viewWidth = width;
+        setViewYZAngle(maxViewYZAngle);
     }
 
     @Override
@@ -156,10 +175,6 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
         gl.glTexEnvx(GL10.GL_TEXTURE_ENV, GL10.GL_TEXTURE_ENV_MODE,
                 GL10.GL_MODULATE);
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-
-        gl.glMatrixMode(GL10.GL_PROJECTION);
-        gl.glLoadIdentity();
-        GLU.gluPerspective(gl, viewYZAngle, viewAspect, 0.1f, 100.0f);
 
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
@@ -180,7 +195,7 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
     public void update(){
         float delta = 0;
         if(lastUpdateTime > 0)
-            delta = (SystemClock.uptimeMillis() - lastUpdateTime);
+            delta = (SystemClock.uptimeMillis() - lastUpdateTime)/1000;
         lastUpdateTime = SystemClock.uptimeMillis();
         if (isTouchDown) return;
         if (pitchSpeed > 0){
@@ -193,18 +208,18 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
 
         if (yawSpeed > 0){
             yawAngle += yawSpeed*delta;
-            yawSpeed *= 0.8;
+            yawSpeed *= 0.9;
         }
-
+        if (scaleSpeed > 0){
+            setViewYZAngle(viewYZAngle + scaleSpeed*delta);
+            scaleSpeed *= 0.95;
+        }
     }
 
-    private boolean isTouchDown = false;
     private float lastX, lastY;
     private float deltaX, deltaY;
     long lastTouchTime;
     float deltaMotionTime;
-    float yawSpeed;
-    float pitchSpeed;
 
     public boolean onTouchDown(float x, float y){
         lastX = x;
@@ -212,6 +227,8 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
         deltaX = 0;
         deltaY = 0;
         isTouchDown = true;
+        meanPitchSpeed.clear();
+        meanYawSpeed.clear();
         return true;
     }
 
@@ -234,7 +251,11 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
         setPitchAngle(deltaY/viewHeight*viewYZAngle);
         lastX = x;
         lastY = y;
-        deltaMotionTime = (SystemClock.uptimeMillis() - lastTouchTime);
+        deltaMotionTime = (SystemClock.uptimeMillis() - lastTouchTime)/1000;
+        if(deltaMotionTime >0 ){
+            meanYawSpeed.addValue(deltaX/viewWidth* viewXZAngle/deltaMotionTime);
+            meanPitchSpeed.addValue(deltaY/viewHeight*viewYZAngle/deltaMotionTime);
+        }
         Log.d("onTouchMove", String.format("x:%f,y:%f,deltaX:%f,deltaY:%f,deltaMotionTime:%f",
                 x,y,deltaX,deltaY,deltaMotionTime));
         lastTouchTime = SystemClock.uptimeMillis();
@@ -243,12 +264,10 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
 
     public boolean onTouchUp(float x, float y){
         isTouchDown = false;
-        if(deltaMotionTime > 0){
-            yawSpeed = deltaX/viewWidth* viewXZAngle/deltaMotionTime;
-            pitchSpeed = deltaY/viewHeight*viewYZAngle/deltaMotionTime;
-            Log.d("yawSpeed", String.valueOf(yawSpeed));
-            Log.d("pitchSpeed", String.valueOf(pitchSpeed));
-        }
+        yawSpeed = meanYawSpeed.getMean();
+        pitchSpeed = meanPitchSpeed.getMean();
+        Log.d("yawSpeed", String.valueOf(yawSpeed));
+        Log.d("pitchSpeed", String.valueOf(pitchSpeed));
         return true;
     }
 }

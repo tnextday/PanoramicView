@@ -1,3 +1,4 @@
 syntax: glob
 gen/*
 bin/*
+.svn/*
