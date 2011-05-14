@@ -16,16 +16,8 @@ class Grid {
     final static int FLOAT_SIZE = 4;
     final static int CHAR_SIZE = 2;
 
-    // Vertex structure:
-    // float x, y, z;
-    // float u, v;
-    // float weight0, weight1;
-    // byte palette0, palette1, pad0, pad1;
-
-    final static int VERTEX_SIZE = 8 * FLOAT_SIZE;
+    final static int VERTEX_SIZE = 5 * FLOAT_SIZE;
     final static int VERTEX_TEXTURE_BUFFER_INDEX_OFFSET = 3;
-    final static int VERTEX_WEIGHT_BUFFER_INDEX_OFFSET = 5;
-    final static int VERTEX_PALETTE_INDEX_OFFSET = 7 * FLOAT_SIZE;
 
     private int mVertexBufferObjectId;
     private int mElementBufferObjectId;
@@ -104,18 +96,12 @@ class Grid {
     }
 
     public void set(int i, int j, float x, float y, float z,
-            float u, float v,
-            float w0, float w1,
-            int p0, int p1) {
+            float u, float v) {
         if (i < 0 || i >= mW) {
             throw new IllegalArgumentException("i");
         }
         if (j < 0 || j >= mH) {
             throw new IllegalArgumentException("j");
-        }
-
-        if (w0 + w1 != 1.0f) {
-            throw new IllegalArgumentException("Weights must add up to 1.0f");
         }
 
         int index = mW * j + i;
@@ -126,12 +112,6 @@ class Grid {
         mVertexBuffer.put(z);
         mVertexBuffer.put(u);
         mVertexBuffer.put(v);
-        mVertexBuffer.put(w0);
-        mVertexBuffer.put(w1);
-
-        mVertexByteBuffer.position(index * VERTEX_SIZE + VERTEX_PALETTE_INDEX_OFFSET);
-        mVertexByteBuffer.put((byte) p0);
-        mVertexByteBuffer.put((byte) p1);
     }
 
     public void createBufferObjects(GL gl) {
@@ -159,7 +139,6 @@ class Grid {
 
     public void draw(GL10 gl) {
         GL11 gl11 = (GL11) gl;
-//        GL11Ext gl11Ext = (GL11Ext) gl;
 
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 
@@ -167,17 +146,9 @@ class Grid {
         gl11.glVertexPointer(3, GL10.GL_FLOAT, VERTEX_SIZE, 0);
         gl11.glTexCoordPointer(2, GL10.GL_FLOAT, VERTEX_SIZE, VERTEX_TEXTURE_BUFFER_INDEX_OFFSET * FLOAT_SIZE);
 
-//        gl.glEnableClientState(GL11Ext.GL_MATRIX_INDEX_ARRAY_OES);
-//        gl.glEnableClientState(GL11Ext.GL_WEIGHT_ARRAY_OES);
-//
-//        gl11Ext.glWeightPointerOES(2, GL10.GL_FLOAT, VERTEX_SIZE, VERTEX_WEIGHT_BUFFER_INDEX_OFFSET  * FLOAT_SIZE);
-//        gl11Ext.glMatrixIndexPointerOES(2, GL10.GL_UNSIGNED_BYTE, VERTEX_SIZE, VERTEX_PALETTE_INDEX_OFFSET );
-
         gl11.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER, mElementBufferObjectId);
         gl11.glDrawElements(GL10.GL_TRIANGLES, mIndexCount, GL10.GL_UNSIGNED_SHORT, 0);
         gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-//        gl.glDisableClientState(GL11Ext.GL_MATRIX_INDEX_ARRAY_OES);
-//        gl.glDisableClientState(GL11Ext.GL_WEIGHT_ARRAY_OES);
         gl11.glBindBuffer(GL11.GL_ARRAY_BUFFER, 0);
         gl11.glBindBuffer(GL11.GL_ELEMENT_ARRAY_BUFFER, 0);
     }

@@ -39,6 +39,7 @@ public class PanoramicView extends Activity{
         mGLSurfaceView.setFocusableInTouchMode(true);
     }
 
+    
     @Override
     protected void onResume() {
         // Ideally a game should implement onResume() and onPause()
@@ -68,6 +69,7 @@ public class PanoramicView extends Activity{
         public void setRenderer(PanoramicRenderer renderer) {
             super.setRenderer(renderer);
             mRender = renderer;
+            
         }
 
         @Override
@@ -82,7 +84,7 @@ public class PanoramicView extends Activity{
                 case MotionEvent.ACTION_UP:
                     return mRender.onTouchUp(x, y);
             }
-            return false;
+            return true;
         }
     }
 }

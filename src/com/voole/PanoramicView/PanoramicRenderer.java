@@ -36,7 +36,7 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
 
     public float yawAngle = 90;   //偏航角 0°~360°
     public float pitchAngle = 0; //俯仰角-90° ~ 90°
-    public float scaleSpeed = -10f;  //缩放速度
+    public float scaleSpeed = -30f/1000f;  //缩放速度
     private float pitchRange;     //俯仰角范围
 
     private boolean isTouchDown = false;
@@ -76,6 +76,7 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
     private void loadTexture(){
         Bitmap bitmap = null;
         bitmap = BitmapFactory.decodeFile(mTexFile);
+        
         setTexture(bitmap);
         bitmap.recycle();
     }
@@ -92,7 +93,7 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
         _gl.glBindTexture(GL10.GL_TEXTURE_2D, mTextureID);
 
         _gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER,
-                GL10.GL_NEAREST);
+                GL10.GL_LINEAR);
         _gl.glTexParameterf(GL10.GL_TEXTURE_2D,
                 GL10.GL_TEXTURE_MAG_FILTER,
                 GL10.GL_LINEAR);
@@ -127,25 +128,38 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
             pitchRange = (float) ((vStartAngle*180/Math.PI) - viewYZAngle/2);
         }
         float r = 2.0f;
-        float x,y,z,rxz, u, v, w0, w1;
+        float x,y,z,rxz, u, v;
         for (int j = 0; j <= vSteps; j++) {
             vAngle = vStartAngle - vTotalAngle * j / vSteps;
             rxz = Math.abs(r * (float) Math.cos(vAngle)) ;
             y = r * (float) Math.sin(vAngle);
             v = (float) j / vSteps;
-            w0 = (float) j / vSteps;
-            w1 = 1.0f - w0;
             for (int i = uSteps; i >= 0; i--) {
                 uAngle = uTotalAngle * i / uSteps;
                 x = rxz * (float) Math.cos(uAngle);
                 z = rxz * (float) Math.sin(uAngle);
                 u = (float) i / uSteps;
-                grid.set(i, j, x, y, z, u, v, w0, w1, 0, 1);
+                grid.set(i, j, x, y, z, u, v);
             }
         }
 
         grid.createBufferObjects(_gl);
         return grid;
+    }
+
+    
+    //确保视角不至于过大
+    public void setMaxViewYZAngle(float maxYZAngle) {
+    	final float maxAngel = 90;
+        if (maxYZAngle > maxAngel) {
+            maxYZAngle = maxAngel;
+        }
+        float maxXZAngle = maxYZAngle*viewAspect;
+        if (maxXZAngle > maxAngel){
+            maxXZAngle = maxAngel;
+            maxYZAngle = maxXZAngle/viewAspect;
+        }
+        this.maxViewYZAngle = maxYZAngle;
     }
 
     public void setViewYZAngle(float angle){
@@ -165,6 +179,7 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
         viewAspect = (float) width / height;
         viewHeight =height;
         viewWidth = width;
+        setMaxViewYZAngle(maxViewYZAngle);
         setViewYZAngle(maxViewYZAngle);
     }
 
@@ -195,41 +210,25 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
     public void update(){
         float delta = 0;
         if(lastUpdateTime > 0)
-            delta = (SystemClock.uptimeMillis() - lastUpdateTime)/1000;
+            delta = SystemClock.uptimeMillis() - lastUpdateTime;
         lastUpdateTime = SystemClock.uptimeMillis();
         if (isTouchDown) return;
-        if (pitchSpeed > 0){
+        if (pitchSpeed != 0){
             if (!setPitchAngle(pitchSpeed * delta)){
                 pitchSpeed = 0;
             }else {
-                pitchSpeed *= 0.8;
+                pitchSpeed *= 0.95;
             }
         }
 
-        if (yawSpeed > 0){
+        if (yawSpeed != 0){
             yawAngle += yawSpeed*delta;
             yawSpeed *= 0.9;
         }
-        if (scaleSpeed > 0){
+        if (scaleSpeed != 0){
             setViewYZAngle(viewYZAngle + scaleSpeed*delta);
-            scaleSpeed *= 0.95;
+            scaleSpeed *= 0.9;
         }
-    }
-
-    private float lastX, lastY;
-    private float deltaX, deltaY;
-    long lastTouchTime;
-    float deltaMotionTime;
-
-    public boolean onTouchDown(float x, float y){
-        lastX = x;
-        lastY = y;
-        deltaX = 0;
-        deltaY = 0;
-        isTouchDown = true;
-        meanPitchSpeed.clear();
-        meanYawSpeed.clear();
-        return true;
     }
 
     public boolean setPitchAngle(float angel){
@@ -239,10 +238,29 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
         }else if(pitchAngle < -pitchRange){
             pitchAngle = -pitchRange;
         }else{
-            return false;
+            return true;
         }
+        return false;
+    }
+    
+    private float lastX, lastY, lastMotionX,lastMotionY;
+    private float deltaX, deltaY;
+    long lastTouchTime;
+    long deltaMotionTime;
+    
+    public boolean onTouchDown(float x, float y){
+        lastX = x;
+        lastY = y;
+        isTouchDown = true;
+        meanPitchSpeed.clear();
+        meanYawSpeed.clear();
+        lastMotionX = x;
+        lastMotionY = y;
+        lastTouchTime = SystemClock.uptimeMillis();
         return true;
     }
+
+
 
     public boolean onTouchMove(float x, float y){
         deltaX = lastX - x;
@@ -251,23 +269,27 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
         setPitchAngle(deltaY/viewHeight*viewYZAngle);
         lastX = x;
         lastY = y;
-        deltaMotionTime = (SystemClock.uptimeMillis() - lastTouchTime)/1000;
-        if(deltaMotionTime >0 ){
-            meanYawSpeed.addValue(deltaX/viewWidth* viewXZAngle/deltaMotionTime);
-            meanPitchSpeed.addValue(deltaY/viewHeight*viewYZAngle/deltaMotionTime);
+        deltaMotionTime = SystemClock.uptimeMillis() - lastTouchTime;
+        if(deltaMotionTime >= 50 ){
+//            meanYawSpeed.addValue((lastMotionX - x)/viewWidth* viewXZAngle/(float)(deltaMotionTime));
+//            meanPitchSpeed.addValue((lastMotionY - y)/viewHeight*viewYZAngle/(float)(deltaMotionTime));
+            yawSpeed = (lastMotionX - x)/viewWidth* viewXZAngle/((float)deltaMotionTime);
+            pitchSpeed = (lastMotionY - y)/viewHeight*viewYZAngle/((float)deltaMotionTime);
+            lastTouchTime = SystemClock.uptimeMillis();
+            lastMotionX = x;
+            lastMotionY = y;
+            Log.d("Speed", String.format("yaw:%f, pitch:%f", yawSpeed, pitchSpeed));
         }
-        Log.d("onTouchMove", String.format("x:%f,y:%f,deltaX:%f,deltaY:%f,deltaMotionTime:%f",
-                x,y,deltaX,deltaY,deltaMotionTime));
-        lastTouchTime = SystemClock.uptimeMillis();
         return true;
     }
 
     public boolean onTouchUp(float x, float y){
         isTouchDown = false;
-        yawSpeed = meanYawSpeed.getMean();
-        pitchSpeed = meanPitchSpeed.getMean();
-        Log.d("yawSpeed", String.valueOf(yawSpeed));
-        Log.d("pitchSpeed", String.valueOf(pitchSpeed));
+//        yawSpeed = meanYawSpeed.getMean();
+//        pitchSpeed = meanPitchSpeed.getMean();
+        yawSpeed *= 3;
+//        pitchSpeed *= 2;
+        Log.d("Speed", String.format("Last: yaw:%f, pitch:%f", yawSpeed, pitchSpeed));
         return true;
     }
 }
