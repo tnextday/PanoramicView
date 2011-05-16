@@ -84,7 +84,7 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
     private void checkGlError(String op) {
         int error;
         while ((error = GLES10.glGetError()) != GLES10.GL_NO_ERROR) {
-            Log.e("Panoramic", op + ": glError " + error);
+            Log.e("Panoramic", op + ": glError " + GLU.gluErrorString(error) );
         }
     }
 
@@ -223,7 +223,7 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
 
         if (yawSpeed != 0){
             yawAngle += yawSpeed*delta;
-            yawSpeed *= 0.9;
+            yawSpeed *= 0.95;
         }
         if (scaleSpeed != 0){
             setViewYZAngle(viewYZAngle + scaleSpeed*delta);
