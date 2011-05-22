@@ -1,5 +1,6 @@
 package com.voole.PanoramicView;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES10;
@@ -11,6 +12,8 @@ import android.util.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,6 +24,7 @@ import javax.microedition.khronos.opengles.GL10;
  */
 public class PanoramicRenderer implements GLSurfaceView.Renderer {
     private String mTexFile;
+    private Context m_context;
     private GL10 _gl;
     private Grid mGrid = null;
     private int mTextureID;
@@ -40,13 +44,12 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
     private float pitchRange;     //俯仰角范围
 
     private boolean isTouchDown = false;
-    private Mean meanYawSpeed = new Mean(3);
-    private Mean meanPitchSpeed = new Mean(3);
     float yawSpeed;
     float pitchSpeed;
 
-    public PanoramicRenderer(String mTexFile) {
+    public PanoramicRenderer(String mTexFile, Context context) {
         this.mTexFile = mTexFile;
+        m_context = context;
     }
 
     @Override
@@ -75,8 +78,21 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
 
     private void loadTexture(){
         Bitmap bitmap = null;
-        bitmap = BitmapFactory.decodeFile(mTexFile);
-        
+        if(mTexFile.startsWith("assets://")){
+            String baseName = mTexFile.substring("assets://".length());
+            InputStream is = null;
+            try {
+                is = m_context.getResources().getAssets().open(baseName);
+                bitmap = BitmapFactory.decodeStream(is);
+                is.close();
+                is = null;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else{
+            bitmap = BitmapFactory.decodeFile(mTexFile);
+        }
+
         setTexture(bitmap);
         bitmap.recycle();
     }
@@ -252,8 +268,6 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
         lastX = x;
         lastY = y;
         isTouchDown = true;
-        meanPitchSpeed.clear();
-        meanYawSpeed.clear();
         lastMotionX = x;
         lastMotionY = y;
         lastTouchTime = SystemClock.uptimeMillis();
@@ -271,8 +285,6 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
         lastY = y;
         deltaMotionTime = SystemClock.uptimeMillis() - lastTouchTime;
         if(deltaMotionTime >= 50 ){
-//            meanYawSpeed.addValue((lastMotionX - x)/viewWidth* viewXZAngle/(float)(deltaMotionTime));
-//            meanPitchSpeed.addValue((lastMotionY - y)/viewHeight*viewYZAngle/(float)(deltaMotionTime));
             yawSpeed = (lastMotionX - x)/viewWidth* viewXZAngle/((float)deltaMotionTime);
             pitchSpeed = (lastMotionY - y)/viewHeight*viewYZAngle/((float)deltaMotionTime);
             lastTouchTime = SystemClock.uptimeMillis();
@@ -285,8 +297,7 @@ public class PanoramicRenderer implements GLSurfaceView.Renderer {
 
     public boolean onTouchUp(float x, float y){
         isTouchDown = false;
-//        yawSpeed = meanYawSpeed.getMean();
-//        pitchSpeed = meanPitchSpeed.getMean();
+
         yawSpeed *= 3;
 //        pitchSpeed *= 2;
         Log.d("Speed", String.format("Last: yaw:%f, pitch:%f", yawSpeed, pitchSpeed));

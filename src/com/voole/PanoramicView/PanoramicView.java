@@ -31,7 +31,7 @@ public class PanoramicView extends Activity{
         // Create our Preview view and set it as the content of our
         // Activity
         mGLSurfaceView = new TouchGLSurfaceView(this);
-        mPanoramic = new PanoramicRenderer(texPath);
+        mPanoramic = new PanoramicRenderer(texPath, this);
         mGLSurfaceView.setRenderer(mPanoramic);
 //        mGLSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
         setContentView(mGLSurfaceView);
