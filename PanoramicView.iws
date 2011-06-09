@@ -5,11 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3ddd87bc-31c0-4515-baf5-c7428aeda1d7" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PanoramicView.iml" afterPath="$PROJECT_DIR$/PanoramicView.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PanoramicView.iws" afterPath="$PROJECT_DIR$/PanoramicView.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/voole/PanoramicView/DemoMain.java" afterPath="$PROJECT_DIR$/src/com/voole/PanoramicView/DemoMain.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/voole/PanoramicView/PanoramicRenderer.java" afterPath="$PROJECT_DIR$/src/com/voole/PanoramicView/PanoramicRenderer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/voole/PanoramicView/PanoramicView.java" afterPath="$PROJECT_DIR$/src/com/voole/PanoramicView/PanoramicView.java" />
     </list>
     <ignored path="PanoramicView.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -68,28 +64,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="PanoramicRenderer.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/com/voole/PanoramicView/PanoramicRenderer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="81" column="0" selection-start="2317" selection-end="2317" vertical-scroll-proportion="0.2779456">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DemoMain.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="DemoMain.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/voole/PanoramicView/DemoMain.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="57" column="49" selection-start="2212" selection-end="2212" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PanoramicView.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/voole/PanoramicView/PanoramicView.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="33" column="56" selection-start="1157" selection-end="1157" vertical-scroll-proportion="0.0">
+            <state line="43" column="49" selection-start="1567" selection-end="1567" vertical-scroll-proportion="0.03626943">
               <folding />
             </state>
           </provider>
@@ -176,9 +154,7 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
-      <pane id="Favorites" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -197,8 +173,28 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="PanoramicView" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="PanoramicView" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="PanoramicView" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Favorites" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -432,19 +428,18 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-4" y="-4" width="1032" height="746" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32903227" sideWeight="0.3226601" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4" sideWeight="0.4868637" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.4868637" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32419354" sideWeight="0.49343187" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32419354" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32903227" sideWeight="0.49671593" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.29333332" sideWeight="0.20806451" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.29333332" sideWeight="0.62741935" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.29333332" sideWeight="0.37903225" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.29333332" sideWeight="0.35967743" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.41612902" sideWeight="0.4923077" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Android Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.65645164" sideWeight="0.4994872" order="7" side_tool="true" content_ui="tabs" />
@@ -452,6 +447,7 @@
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32755905" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32419354" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
@@ -543,44 +539,34 @@
         <state line="32" column="31" selection-start="1507" selection-end="1507" vertical-scroll-proportion="0.3529412" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/voole/PanoramicView/Grid.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="43" column="0" selection-start="1275" selection-end="1275" vertical-scroll-proportion="0.048" />
-      </provider>
-    </entry>
     <entry file="jar://D:/android-sdk-windows/platforms/android-8/android.jar!/java/io/InputStream.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="22" selection-start="132" selection-end="197" vertical-scroll-proportion="0.16245487">
-          <folding />
-        </state>
+        <state line="5" column="22" selection-start="132" selection-end="197" vertical-scroll-proportion="0.16245487" />
       </provider>
     </entry>
     <entry file="jar://D:/android-sdk-windows/platforms/android-8/android.jar!/android/graphics/BitmapFactory.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="42" selection-start="386" selection-end="490" vertical-scroll-proportion="0.34837544">
-          <folding />
-        </state>
+        <state line="11" column="42" selection-start="386" selection-end="490" vertical-scroll-proportion="0.34837544" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/voole/PanoramicView/PanoramicView.java">
+    <entry file="file://$PROJECT_DIR$/src/com/voole/PanoramicView/Grid.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="56" selection-start="1157" selection-end="1157" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/voole/PanoramicView/DemoMain.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="57" column="49" selection-start="2212" selection-end="2212" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="43" column="0" selection-start="1235" selection-end="1235" vertical-scroll-proportion="1.150259" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/voole/PanoramicView/PanoramicRenderer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="81" column="0" selection-start="2317" selection-end="2317" vertical-scroll-proportion="0.2779456">
-          <folding />
-        </state>
+        <state line="23" column="54" selection-start="578" selection-end="578" vertical-scroll-proportion="0.31088084" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/voole/PanoramicView/PanoramicView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="33" column="56" selection-start="1157" selection-end="1157" vertical-scroll-proportion="0.68393785" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/voole/PanoramicView/DemoMain.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="43" column="49" selection-start="1567" selection-end="1567" vertical-scroll-proportion="0.03626943" />
       </provider>
     </entry>
   </component>
